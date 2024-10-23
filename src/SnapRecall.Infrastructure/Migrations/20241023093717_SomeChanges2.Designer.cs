@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SnapRecall.Infrastructure.Data;
@@ -11,9 +12,11 @@ using SnapRecall.Infrastructure.Data;
 namespace SnapRecall.Infrastructure.Migrations
 {
     [DbContext(typeof(SnapRecallDbContext))]
-    partial class SnapRecallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023093717_SomeChanges2")]
+    partial class SomeChanges2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +47,7 @@ namespace SnapRecall.Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("SnapRecall.Domain.Question", b =>
@@ -66,7 +69,7 @@ namespace SnapRecall.Infrastructure.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("SnapRecall.Domain.Topic", b =>
@@ -93,7 +96,7 @@ namespace SnapRecall.Infrastructure.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Topics", (string)null);
+                    b.ToTable("Topics");
                 });
 
             modelBuilder.Entity("SnapRecall.Domain.User", b =>
@@ -118,7 +121,7 @@ namespace SnapRecall.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SnapRecall.Domain.Option", b =>

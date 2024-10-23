@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SnapRecall.Application.SnapRecallBotHandlers;
 using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.GettingUpdates;
@@ -17,15 +18,18 @@ namespace SnapRecall.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            var client = new TelegramBotClient();
-            builder.Services.AddSingleton<ITelegramBotClient>(client);
+            builder.Services.AddTransient<ITelegramBot, SnapRecallBot>();
+            builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<ITelegramBotClient, TelegramBotClient>((serviceProvider) =>
+            {
+                var httpClient = serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient();
+
+                return new TelegramBotClient("7744751662:AAE1wcsbF_RGEln5MpMd582oxiKgVtqwxvc", httpClient);
+            });
 
             builder.Services.AddDbContext<SnapRecallDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            client.DeleteWebhook(true); // Delete old webhook
-            client.SetWebhook("https://working-badger-model.ngrok-free.app/bot"); // Set new webhook
-            var info = client.GetWebhookInfo();
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
             var app = builder.Build();
@@ -44,6 +48,7 @@ namespace SnapRecall.Api
 
             app.MapControllers();
 
+            app.UseTelegramWebhook();
             app.Run();
         }
     }

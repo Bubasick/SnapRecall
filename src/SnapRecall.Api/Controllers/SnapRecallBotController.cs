@@ -1,56 +1,41 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SnapRecall.Application.SnapRecallBotHandlers;
 using Telegram.BotAPI;
-using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.GettingUpdates;
 
 namespace SnapRecall.Api.Controllers
 {
     [ApiController]
     [Route("bot")]
-    public class SnapRecallBotController(ITelegramBotClient client, IMediator mediator) : ControllerBase
+    public class SnapRecallBotController(ITelegramBot bot,IConfiguration configuration, ILogger<SnapRecallBotController> logger, IMediator mediator) : ControllerBase
     {
 
         [HttpPost]
-        public IActionResult Post(
+        public async Task<IActionResult> PostAsync(
             // The secret token is optional, but it's highly recommended to use it.
             [FromHeader(Name = "X-Telegram-Bot-Api-Secret-Token")] string secretToken,
-            [FromBody] Update update)
+            [FromBody] Update update,
+            CancellationToken cancellationToken)
         {
-
-            long chatId = update.Message.Chat.Id; // Target chat Id
-            client.SendMessage(chatId, "Hello World!"); // Send a message
-            if (update is null)
+            if ("webhookToken" != secretToken)
             {
-                return BadRequest();
+#if DEBUG
+                logger.LogWarning("Failed access");
+#endif
+                this.Unauthorized();    
             }
-            // Check if the secret token is valid
-            // Process your update
-            return Ok();
-        }
+            if (update == default)
+            {
+#if DEBUG
+                logger.LogWarning("Invalid update detected");
+#endif
+                return this.BadRequest();
+            } 
+            
+            await bot.OnUpdateAsync(update, cancellationToken);
 
-        //[HttpGet]
-        //public IActionResult Start()
-        //{
-        //    var updates = client.GetUpdates();
-        //    while (true)
-        //    {
-        //        if (updates.Any())
-        //        {
-        //            foreach (var update in updates)
-        //            {
-        //                long chatId = update.Message.Chat.Id; // Target chat Id
-        //                client.SendMessage(chatId, "Hello World!"); // Send a message
-        //            }
-        //            var offset = updates.Last().UpdateId + 1;
-        //            updates = client.GetUpdates(offset);
-        //        }
-        //        else
-        //        {
-        //            updates = client.GetUpdates();
-        //        }
-        //    }
-        //    return Ok();
-        //}
+            return await Task.FromResult(this.Ok());
+        }
     }
 }
