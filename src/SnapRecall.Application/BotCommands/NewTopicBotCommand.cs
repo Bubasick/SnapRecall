@@ -1,13 +1,52 @@
-﻿using Telegram.BotAPI;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using SnapRecall.Application.BotCommands;
+using SnapRecall.Application.Features.Topics.CreateTopicCommand;
+using SnapRecall.Application.Features.Users.UpdateUserCommand;
+using SnapRecall.Infrastructure.Data;
+using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Domain.BotCommands;
 
-public static class NewTopicBotCommand
+public class NewTopicBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
-    public const string Name = "newtopic";
-    public const string Description = "add new topic";
+    public static string Name = Commands.NewTopicBotCommand;
+    public static string Description = "add new topic";
 
     public static BotCommand Command => new(Name, Description);
+
+    public async Task OnCommand(string previousCommand, string command, Message message, CancellationToken cancellationToken)
+    {
+        var topic = dbContext.Topics
+            .Include(x => x.Author)
+            .FirstOrDefault(x => x.Author.Id == message.From.Id && !x.IsCreationFinished);
+
+        if (topic != null)
+        {
+            await client.SendMessageAsync(message.Chat.Id, "You have an unfinished topic", cancellationToken: cancellationToken);
+            return;
+        }
+
+        await mediator.Send(
+            new UpdateUserCommand()
+            {
+                Id = message.From.Id,
+                Name = message.From.FirstName,
+                LastExecutedCommand = NewTopicBotCommand.Name,
+                Tag = message.From.Username,
+            },
+            cancellationToken);
+
+        await mediator.Send(
+            new CreateTopicCommand()
+            {
+                AuthorId = message.From.Id,
+            },
+            cancellationToken);
+
+
+        await client.SendMessageAsync(message.Chat.Id, "Please enter topic name", cancellationToken: cancellationToken);
+    }
 }

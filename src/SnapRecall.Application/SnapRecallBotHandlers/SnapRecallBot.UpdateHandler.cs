@@ -19,21 +19,8 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 update.GetUpdateType()
             );
 #endif
-            var myUsername =  await Client.GetMeAsync(cancellationToken);
-            SetCommandExtractor(myUsername.Username!);
-            if (CommandExtractor!.HasCommand(update.Message))
-            {
-                var (commandName, args) = CommandExtractor.ExtractCommand(update.Message);
-                await OnCommandAsync(update.Message, commandName, args, cancellationToken);
-                return;
-            }
-            else
-            {
-                await OnMessageAsync(update.Message, cancellationToken);
-                return;
-            }
 
-            base.OnUpdate(update);
+            await base.OnUpdateAsync(update, cancellationToken);
         }
     }
 }

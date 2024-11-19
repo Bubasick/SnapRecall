@@ -32,7 +32,7 @@ public static class ApplicationBuilderExtensions
         // Delete my old commands
         bot.DeleteMyCommands();
         // Set my commands
-        bot.SetMyCommands([NewTopicBotCommand.Command, TopicBotCommand.Command]);
+        bot.SetMyCommands([NewTopicBotCommand.Command, ViewTopicsBotCommand.Command]);
 
         // Delete webhook
         bot.DeleteWebhook();

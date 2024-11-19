@@ -1,10 +1,9 @@
-﻿using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SnapRecall.Application.BotCommands;
 using SnapRecall.Application.Features.Questions;
 using SnapRecall.Application.Features.Topics.UpdateTopicCommand;
 using SnapRecall.Domain;
-using SnapRecall.Domain.BotCommands;
 using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI;
@@ -22,6 +21,16 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 return;
             }
 
+            var myUsername = await Client.GetMeAsync(cancellationToken);
+            SetCommandExtractor(myUsername.Username!);
+            if (CommandExtractor!.HasCommand(message))
+            {
+                var (commandName, args) = CommandExtractor.ExtractCommand(message);
+                await OnCommandAsync(message, commandName, args, cancellationToken);
+                return;
+            }
+
+
             var hasText = !string.IsNullOrEmpty(message.Text); // True if message has text;
 #if DEBUG
             this.logger.LogInformation("New message from chat id: {ChatId}", message!.Chat.Id);
@@ -36,63 +45,56 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
             {
                 return;
             }
-            switch (user.LastExecutedCommand)
+
+            if (user.LastExecutedCommand == Commands.NewTopicBotCommand)
             {
-                case NewTopicBotCommand.Name:
-                    var unfinishedTopic = dbContext.Topics
-                        .Include(x => x.Author)
-                        .FirstOrDefault(x => x.Author.Id == message.From.Id && !x.IsCreationFinished);
+                var unfinishedTopic = dbContext.Topics
+                    .Include(x => x.Author)
+                    .FirstOrDefault(x => x.Author.Id == message.From.Id && !x.IsCreationFinished);
 
-                    if (unfinishedTopic is null)
+                if (unfinishedTopic is null)
+                {
+                    throw new Exception();
+                }
+                if (hasText)
+                {
+                    if (!string.IsNullOrEmpty(unfinishedTopic.Name))
                     {
-                        throw new Exception();
+                        Client.SendMessageAsync(message.Chat.Id, "Topic already named. Please add your first question using the button below");
                     }
-                    if (hasText)
+                    await mediator.Send(new UpdateTopicCommand()
                     {
-                        if (!string.IsNullOrEmpty(unfinishedTopic.Name))
+                        TopicId = unfinishedTopic.Id,
+                        Name = message.Text,
+                    });
+
+                    await RenderCreateQuestionButton(message, "Good. Now send me a poll with your first question.", cancellationToken);
+
+                }
+
+                else if (message.Poll != null && message.Poll.CorrectOptionId.HasValue)
+                {
+                    var optionsToAdd = new List<Option>();
+                    var options = message.Poll.Options.ToList();
+                    for (var i = 0; i < options.Count(); i++)
+                    {
+                        optionsToAdd.Add(new Option()
                         {
-                            Client.SendMessageAsync(message.Chat.Id, "Topic already named. Please add your first question using the button below");
-                        }
-                        await mediator.Send(new UpdateTopicCommand()
-                        {
-                            TopicId = unfinishedTopic.Id,
-                            Name = message.Text,
+                            Text = options[i].Text,
+                            IsCorrect = message.Poll.CorrectOptionId.Value == i,
                         });
-
-                        await RenderCreateQuestionButton(message, "Good. Now send me a poll with your first question.", cancellationToken);
-                        
                     }
 
-                    else if (message.Poll != null && message.Poll.CorrectOptionId.HasValue)
+                    await mediator.Send(new AddQuestionCommand()
                     {
-                        var optionsToAdd = new List<Option>();
-                        var options = message.Poll.Options.ToList();
-                        for (var i = 0; i < options.Count(); i++)
-                        {
-                            optionsToAdd.Add(new Option()
-                            {
-                                Text = options[i].Text,
-                                IsCorrect = message.Poll.CorrectOptionId.Value == i,
-                            });
-                        }
+                        TopicId = unfinishedTopic.Id,
+                        Text = message.Poll.Question,
+                        Options = optionsToAdd,
 
-                        await mediator.Send(new AddQuestionCommand()
-                        {
-                            TopicId = unfinishedTopic.Id,
-                            Text = message.Poll.Question,
-                            Options = optionsToAdd,
-                            
-                        }, cancellationToken);
-                        await RenderCreateQuestionButton(message, "Question added. Use /done to finish topic creation");
-                    }
-
-                    break;
-
-
-                default:
-                    break;
+                    }, cancellationToken);
+                    await RenderCreateQuestionButton(message, "Question added. Use /done to finish topic creation");
+                }
             }
-            
 
             await base.OnMessageAsync(message, cancellationToken);
         }
@@ -105,13 +107,15 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 {
                     new KeyboardButton("Create a question")
                     {
-                        RequestPoll = new KeyboardButtonPollType{Type = "quiz"},
+                        RequestPoll = new KeyboardButtonPollType{Type = "quiz"}
 
                     }//column 1 row 1
                 }
             };
 
             var keyboardMarkup = new ReplyKeyboardMarkup(keyboard);
+
+            keyboardMarkup.ResizeKeyboard = true;
 
             await Client.SendMessageAsync(message.Chat.Id, text, replyMarkup: keyboardMarkup, cancellationToken: cancellationToken);
         }

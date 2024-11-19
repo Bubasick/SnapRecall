@@ -17,4 +17,8 @@
     <ProjectReference Include="..\SnapRecall.Infrastructure\SnapRecall.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Topics\GetTopicsRequest\" />
+  </ItemGroup>
+
 </Project>

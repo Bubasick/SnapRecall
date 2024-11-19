@@ -12,9 +12,10 @@ public class AddQuestionCommandHandler(SnapRecallDbContext dbContext) : IRequest
         var question = new Question()
         {
             Text = request.Text,
+            TopicId = request.TopicId,
+            Options = request.Options,
         };
         dbContext.Questions.Add(question);
-        question.Options = request.Options;
         await dbContext.SaveChangesAsync(token);
     }
 }
