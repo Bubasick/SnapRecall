@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SnapRecall.Infrastructure.Data;
@@ -11,9 +12,11 @@ using SnapRecall.Infrastructure.Data;
 namespace SnapRecall.Infrastructure.Migrations
 {
     [DbContext(typeof(SnapRecallDbContext))]
-    partial class SnapRecallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202094434_Add_Question_And_Attachment_Tables")]
+    partial class Add_Question_And_Attachment_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
