@@ -60,8 +60,10 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 {
                     if (!string.IsNullOrEmpty(unfinishedTopic.Name))
                     {
-                        Client.SendMessageAsync(message.Chat.Id, "Topic already named. Please add your first question using the button below");
+                        await Client.SendMessageAsync(message.Chat.Id, "Topic already named. Please add your first question using the button below");
+                        return;
                     }
+
                     await mediator.Send(new UpdateTopicCommand()
                     {
                         TopicId = unfinishedTopic.Id,
@@ -105,11 +107,12 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
             {
                 new KeyboardButton[]
                 {
-                    new KeyboardButton("Create a question")
+                    new KeyboardButton("Create a quiz")
                     {
                         RequestPoll = new KeyboardButtonPollType{Type = "quiz"}
 
-                    }//column 1 row 1
+                    },
+                    new KeyboardButton("Create a question"),
                 }
             };
 

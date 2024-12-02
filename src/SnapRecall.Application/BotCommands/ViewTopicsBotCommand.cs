@@ -45,8 +45,7 @@ public class ViewTopicsBotCommand(SnapRecallDbContext dbContext, ITelegramBotCli
         var sb = new StringBuilder();
         foreach (var tp in topics)
         {
-            sb.AppendLine($"{tp.Name} - /begin{tp.Id}");
-            
+            sb.AppendLine($"{tp.Name} - /begin{tp.Id} or /delete{tp.Id}");
         }
 
         await client.SendMessageAsync(message.Chat.Id, sb.ToString(), cancellationToken: cancellationToken);

@@ -9,7 +9,7 @@ public class AddQuestionCommandHandler(SnapRecallDbContext dbContext) : IRequest
 {
     public async Task Handle(AddQuestionCommand request, CancellationToken token)
     {
-        var question = new Question()
+        var question = new Quiz()
         {
             Text = request.Text,
             TopicId = request.TopicId,

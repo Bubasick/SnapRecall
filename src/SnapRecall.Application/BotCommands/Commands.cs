@@ -7,5 +7,6 @@
         public static string StartBotCommand = "start";
         public static string ViewTopicsBotCommand = "topics";
         public static string BeginTopicBotCommand = "begin";
+        public static string DeleteTopicBotCommand = "delete";
     }
 }
