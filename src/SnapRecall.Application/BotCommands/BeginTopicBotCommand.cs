@@ -21,7 +21,7 @@ public class BeginTopicBotCommand(SnapRecallDbContext dbContext, ITelegramBotCli
     {
         int.TryParse(command.TrimStart(Commands.BeginTopicBotCommand.ToCharArray()), CultureInfo.InvariantCulture, out var id);
 
-        var questions = dbContext.Questions
+        var questions = dbContext.Quizzes
             .Include(x => x.Options)
             .Include(x => x.Topic)
             .Where(x => x.TopicId == id && x.Topic.IsCreationFinished)

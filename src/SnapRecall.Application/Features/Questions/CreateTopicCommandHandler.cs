@@ -15,7 +15,7 @@ public class AddQuestionCommandHandler(SnapRecallDbContext dbContext) : IRequest
             TopicId = request.TopicId,
             Options = request.Options,
         };
-        dbContext.Questions.Add(question);
+        dbContext.Quizzes.Add(question);
         await dbContext.SaveChangesAsync(token);
     }
 }
