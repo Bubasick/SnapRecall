@@ -5,9 +5,9 @@ using SnapRecall.Infrastructure.Data;
 
 namespace SnapRecall.Application.Features.Topics.CreateTopicCommand;
 
-public class AddQuestionCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<AddQuestionCommand>
+public class AddQuizCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<AddQuizCommand>
 {
-    public async Task Handle(AddQuestionCommand request, CancellationToken token)
+    public async Task Handle(AddQuizCommand request, CancellationToken token)
     {
         var question = new Quiz()
         {

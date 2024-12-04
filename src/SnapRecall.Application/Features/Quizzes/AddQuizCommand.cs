@@ -3,7 +3,7 @@ using SnapRecall.Domain;
 
 namespace SnapRecall.Application.Features.Questions
 {
-    public class AddQuestionCommand : IRequest
+    public class AddQuizCommand : IRequest
     {
         public long TopicId { get; set; }
         public required string Text { get; set; }

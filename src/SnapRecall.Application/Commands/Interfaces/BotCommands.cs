@@ -1,6 +1,6 @@
-﻿namespace SnapRecall.Application.BotCommands
+﻿namespace SnapRecall.Application.Commands.Interfaces
 {
-    public static class Commands
+    public static class BotCommands
     {
         public static string ConfirmTopicCreationBotCommand = "done";
         public static string NewTopicBotCommand = "newtopic";

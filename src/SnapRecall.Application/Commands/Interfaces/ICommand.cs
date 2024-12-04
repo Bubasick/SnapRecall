@@ -1,6 +1,6 @@
 ﻿using Telegram.BotAPI.AvailableTypes;
 
-namespace SnapRecall.Application.BotCommands
+namespace SnapRecall.Application.Commands.Interfaces
 {
     public interface ICommand
     {

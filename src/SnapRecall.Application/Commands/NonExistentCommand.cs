@@ -1,11 +1,11 @@
 ﻿using MediatR;
-using SnapRecall.Application.BotCommands;
+using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
-namespace SnapRecall.Domain.BotCommands;
+namespace SnapRecall.Application.Commands;
 
 public class NonExistentCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {

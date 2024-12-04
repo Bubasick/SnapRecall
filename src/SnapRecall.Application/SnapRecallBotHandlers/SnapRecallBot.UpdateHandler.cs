@@ -1,8 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Threading;
-using Telegram.BotAPI;
-using Telegram.BotAPI.AvailableMethods;
-using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.GettingUpdates;
 

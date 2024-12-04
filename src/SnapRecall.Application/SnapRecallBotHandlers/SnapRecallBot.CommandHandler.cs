@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SnapRecall.Application.Commands.Interfaces;
 using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.Extensions;
 
@@ -19,7 +20,7 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
 #endif
             var previousCommand = dbContext.Users.FirstOrDefault(x => x.Id == message.From.Id)?.LastExecutedCommand;
 
-            var handler = SimpleBotCommandFactory.GetCommandHandler(dbContext, Client, mediator, commandName);
+            var handler = SimpleBotCommandFactory.GetCommandHandler(dbContext, client, mediator, commandName);
 
             await handler.OnCommand(previousCommand, commandName, message, cancellationToken);
         }

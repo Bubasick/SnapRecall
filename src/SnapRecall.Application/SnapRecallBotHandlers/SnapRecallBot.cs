@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
@@ -19,18 +20,31 @@ public partial class SnapRecallBot : SimpleTelegramBotBase
     private readonly IMediator mediator;
 
     private readonly SnapRecallDbContext dbContext;
-    public ITelegramBotClient Client { get; }
 
-    public SnapRecallBot(ILogger<SnapRecallBot> logger, IConfiguration configuration, ITelegramBotClient botClient, IMediator mediator, SnapRecallDbContext dbContext)
+    private readonly TelegramSettings settings;
+    private readonly HttpClient httpClient;
+
+    private ITelegramBotClient client { get; }
+
+    public SnapRecallBot(
+        ILogger<SnapRecallBot> logger,
+        IConfiguration configuration,
+        ITelegramBotClient botClient,
+        IMediator mediator,
+        SnapRecallDbContext dbContext,
+        IOptions<TelegramSettings> settings,
+        HttpClient httpClient)
     {
         this.logger = logger;
         this.mediator = mediator;
         this.dbContext = dbContext;
 
         // var botToken = configuration.GetValue<string>("Telegram:BotToken");
-        this.Client = botClient;
+        this.client = botClient;
+        this.httpClient = httpClient;
 
-        var myUsername = this.Client.GetMe().Username!;
+        this.settings = settings.Value;
+        var myUsername = this.client.GetMe().Username!;
         // This will provide a better command filtering.
         this.SetCommandExtractor(myUsername, true);
     }

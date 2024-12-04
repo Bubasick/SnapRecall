@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SnapRecall.Application.BotCommands;
+using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Topics.UpdateTopicCommand;
 using SnapRecall.Application.Features.Users.UpdateUserCommand;
 using SnapRecall.Infrastructure.Data;
@@ -8,14 +8,14 @@ using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
-namespace SnapRecall.Domain.BotCommands;
+namespace SnapRecall.Application.Commands;
 
 public class ConfirmTopicCreationBotCommand(
     SnapRecallDbContext dbContext,
     ITelegramBotClient client,
     ISender mediator) : ICommand
 {
-    public static string Name = Commands.ConfirmTopicCreationBotCommand;
+    public static string Name = BotCommands.ConfirmTopicCreationBotCommand;
     public static string Description = "confirm topic creation";
         
     public static BotCommand Command => new(Name, Description);
@@ -52,7 +52,7 @@ public class ConfirmTopicCreationBotCommand(
             {
                 Id = message.From.Id,
                 Name = message.From.FirstName,
-                LastExecutedCommand = ConfirmTopicCreationBotCommand.Name,
+                LastExecutedCommand = Name,
                 Tag = message.From.Username,
             },
             cancellationToken);

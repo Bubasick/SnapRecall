@@ -1,8 +1,6 @@
-using SnapRecall.Application.SnapRecallBotHandlers;
-using SnapRecall.Domain.BotCommands;
+using SnapRecall.Application.Commands;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
-using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.GettingUpdates;
 
 /// <summary>

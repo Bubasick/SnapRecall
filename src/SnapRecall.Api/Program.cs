@@ -1,5 +1,6 @@
 using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
+using SnapRecall.Application;
 using SnapRecall.Application.SnapRecallBotHandlers;
 using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
@@ -13,6 +14,9 @@ namespace SnapRecall.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.Configure<TelegramSettings>(
+                builder.Configuration.GetSection(TelegramSettings.SectionName));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

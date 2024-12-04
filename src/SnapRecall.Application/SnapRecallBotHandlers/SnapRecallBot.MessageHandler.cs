@@ -1,13 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using SnapRecall.Application.BotCommands;
-using SnapRecall.Application.Features.Questions;
-using SnapRecall.Application.Features.Topics.UpdateTopicCommand;
-using SnapRecall.Domain;
+﻿using Microsoft.Extensions.Logging;
 using Telegram.BotAPI.AvailableTypes;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
+using SnapRecall.Application.Messages.Interfaces;
 
 namespace SnapRecall.Application.SnapRecallBotHandlers
 {
@@ -21,7 +17,7 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 return;
             }
 
-            var myUsername = await Client.GetMeAsync(cancellationToken);
+            var myUsername = await client.GetMeAsync(cancellationToken);
             SetCommandExtractor(myUsername.Username!);
             if (CommandExtractor!.HasCommand(message))
             {
@@ -29,15 +25,9 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 await OnCommandAsync(message, commandName, args, cancellationToken);
                 return;
             }
-
-
-            var hasText = !string.IsNullOrEmpty(message.Text); // True if message has text;
 #if DEBUG
-            this.logger.LogInformation("New message from chat id: {ChatId}", message!.Chat.Id);
-            this.logger.LogInformation(
-                "Message: {MessageContent}",
-                hasText ? message.Text : "No text"
-            );
+            logger.LogInformation("New message from chat id: {ChatId}", message!.Chat.Id);
+            logger.LogInformation("Message: {MessageContent}", message.Text);
 #endif
 
             var user = dbContext.Users.FirstOrDefault(x => x.Id == message.From.Id);
@@ -46,81 +36,11 @@ namespace SnapRecall.Application.SnapRecallBotHandlers
                 return;
             }
 
-            if (user.LastExecutedCommand == Commands.NewTopicBotCommand)
-            {
-                var unfinishedTopic = dbContext.Topics
-                    .Include(x => x.Author)
-                    .FirstOrDefault(x => x.Author.Id == message.From.Id && !x.IsCreationFinished);
+            var handler = SimpleBotMessageFactory.GetMessageHandler(message, dbContext, client, mediator, settings, httpClient);
 
-                if (unfinishedTopic is null)
-                {
-                    throw new Exception();
-                }
-                if (hasText)
-                {
-                    if (!string.IsNullOrEmpty(unfinishedTopic.Name))
-                    {
-                        await Client.SendMessageAsync(message.Chat.Id, "Topic already named. Please add your first question using the button below");
-                        return;
-                    }
-
-                    await mediator.Send(new UpdateTopicCommand()
-                    {
-                        TopicId = unfinishedTopic.Id,
-                        Name = message.Text,
-                    });
-
-                    await RenderCreateQuestionButton(message, "Good. Now send me a poll with your first question.", cancellationToken);
-
-                }
-
-                else if (message.Poll != null && message.Poll.CorrectOptionId.HasValue)
-                {
-                    var optionsToAdd = new List<Option>();
-                    var options = message.Poll.Options.ToList();
-                    for (var i = 0; i < options.Count(); i++)
-                    {
-                        optionsToAdd.Add(new Option()
-                        {
-                            Text = options[i].Text,
-                            IsCorrect = message.Poll.CorrectOptionId.Value == i,
-                        });
-                    }
-
-                    await mediator.Send(new AddQuestionCommand()
-                    {
-                        TopicId = unfinishedTopic.Id,
-                        Text = message.Poll.Question,
-                        Options = optionsToAdd,
-
-                    }, cancellationToken);
-                    await RenderCreateQuestionButton(message, "Question added. Use /done to finish topic creation");
-                }
-            }
+            await handler.OnMessage(message, cancellationToken);
 
             await base.OnMessageAsync(message, cancellationToken);
-        }
-
-        public async Task RenderCreateQuestionButton(Message message, string text = default, CancellationToken cancellationToken = default)
-        {
-            var keyboard = new KeyboardButton[][]
-            {
-                new KeyboardButton[]
-                {
-                    new KeyboardButton("Create a quiz")
-                    {
-                        RequestPoll = new KeyboardButtonPollType{Type = "quiz"}
-
-                    },
-                    new KeyboardButton("Create a question"),
-                }
-            };
-
-            var keyboardMarkup = new ReplyKeyboardMarkup(keyboard);
-
-            keyboardMarkup.ResizeKeyboard = true;
-
-            await Client.SendMessageAsync(message.Chat.Id, text, replyMarkup: keyboardMarkup, cancellationToken: cancellationToken);
         }
     }
 }
