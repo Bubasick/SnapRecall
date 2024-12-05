@@ -24,8 +24,8 @@ public static class ApplicationBuilderExtensions
         var configuration = app.ApplicationServices.GetRequiredService<IConfiguration>();
         var bot = app.ApplicationServices.GetRequiredService<ITelegramBotClient>();
 
-        var webhookToken = configuration["Telegram:WebhookToken"]; // ENV: Telegram__WebhookToken, JSON: "Telegram:WebhookToken"
-        var webhookUrl = configuration["Telegram:WebhookUrl"]; // ENV: Telegram__WebhookUrl, JSON: "Telegram:WebhookUrl"
+        //var webhookToken = configuration["Telegram:WebhookToken"]; // ENV: Telegram__WebhookToken, JSON: "Telegram:WebhookToken"
+        //var webhookUrl = configuration["Telegram:WebhookUrl"]; // ENV: Telegram__WebhookUrl, JSON: "Telegram:WebhookUrl"
 
         // Delete my old commands
         bot.DeleteMyCommands();
@@ -36,7 +36,7 @@ public static class ApplicationBuilderExtensions
         bot.DeleteWebhook();
 
         // Set webhook
-        bot.SetWebhook("https://working-badger-model.ngrok-free.app/bot", secretToken: "webhookToken");
+        bot.SetWebhook("https://snaprecallapi20241205140052.azurewebsites.net", secretToken: "webhookToken");
 
         return app;
     }
