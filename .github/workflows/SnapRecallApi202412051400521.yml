@@ -10,7 +10,7 @@ env:
   AZURE_APIM_RESOURCEGROUP: SnapRecall
   AZURE_APIM_SERVICENAME: SnapRecallApi
   AZURE_APIM_API_ID: SnapRecallApi
-  AZURE_APIM_APPSERVICEURL: ''
+  AZURE_APIM_APPSERVICEURL: https://snaprecallapi20241205140052.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
   SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
   API_IMPORT_SPECIFICATION_PATH: src\SnapRecall.Api\publish\swagger.json
@@ -64,7 +64,7 @@ jobs:
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.SnapRecallApi20241205140052_4E7E }}
+        publish-profile: ${{ secrets.SnapRecallApi20241205140052_3FF3 }}
     - name: Azure Login
       uses: azure/login@v1
       with:
