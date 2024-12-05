@@ -36,7 +36,7 @@ public static class ApplicationBuilderExtensions
         bot.DeleteWebhook();
 
         // Set webhook
-        bot.SetWebhook("https://snaprecallapi20241205140052.azurewebsites.net", secretToken: "webhookToken");
+        bot.SetWebhook("https://SnapRecallApi20241205160816.azurewebsites.net", secretToken: "webhookToken");
 
         return app;
     }
