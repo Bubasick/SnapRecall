@@ -64,7 +64,7 @@ jobs:
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
         publish-profile: ${{ secrets.SnapRecallApi20241205140052_3FF3 }}
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.SnapRecallApi_SPN }}
     - name: Import API into Azure API Management
