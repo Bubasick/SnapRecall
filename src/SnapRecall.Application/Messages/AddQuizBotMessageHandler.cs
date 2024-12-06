@@ -3,14 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using SnapRecall.Application.Features.Questions;
 using SnapRecall.Application.Messages.Interfaces;
 using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Messages
 {
-    public class AddQuizBotMessageHandler(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : IMessage
+    public class AddQuizBotMessageHandler(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : IMessage
     {
         public async Task OnMessage(Message message, CancellationToken cancellationToken)
         {

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SnapRecall.Application.Commands.Interfaces;
-using SnapRecall.Infrastructure.Data;
+
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableTypes;
 
@@ -10,7 +10,7 @@ namespace SnapRecall.Application.Messages.Interfaces
     {
         public static IMessage GetMessageHandler(
             Message message,
-            SnapRecallDbContext dbContext,
+            ISnapRecallDbContext dbContext,
             ITelegramBotClient client,
             IMediator mediator,
             TelegramSettings settings,

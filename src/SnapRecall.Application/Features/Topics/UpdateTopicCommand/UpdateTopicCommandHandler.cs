@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
 
 namespace SnapRecall.Application.Features.Topics.UpdateTopicCommand;
 
-public class UpdateTopicCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<UpdateTopicCommand>
+public class UpdateTopicCommandHandler(ISnapRecallDbContext dbContext) : IRequestHandler<UpdateTopicCommand>
 {
     public async Task Handle(UpdateTopicCommand request, CancellationToken token)
     {

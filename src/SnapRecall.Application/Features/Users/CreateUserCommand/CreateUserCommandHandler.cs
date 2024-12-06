@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
+
 
 namespace SnapRecall.Application.Features.Users.CreateUserCommand;
 
-public class CreateUserCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<CreateUserCommand>
+public class CreateUserCommandHandler(ISnapRecallDbContext dbContext) : IRequestHandler<CreateUserCommand>
 {
     public async Task Handle(CreateUserCommand request, CancellationToken token)
     {

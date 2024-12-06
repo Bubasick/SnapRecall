@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Topics.UpdateTopicCommand;
 using SnapRecall.Application.Features.Users.UpdateUserCommand;
-using SnapRecall.Infrastructure.Data;
+
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
@@ -11,7 +11,7 @@ using Telegram.BotAPI.AvailableTypes;
 namespace SnapRecall.Application.Commands;
 
 public class ConfirmTopicCreationBotCommand(
-    SnapRecallDbContext dbContext,
+    ISnapRecallDbContext dbContext,
     ITelegramBotClient client,
     ISender mediator) : ICommand
 {

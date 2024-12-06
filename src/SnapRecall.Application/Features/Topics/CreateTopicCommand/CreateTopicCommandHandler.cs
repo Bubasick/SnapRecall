@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
+
 
 namespace SnapRecall.Application.Features.Topics.CreateTopicCommand;
 
-public class CreateTopicCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<CreateTopicCommand>
+public class CreateTopicCommandHandler(ISnapRecallDbContext dbContext) : IRequestHandler<CreateTopicCommand>
 {
     public async Task Handle(CreateTopicCommand request, CancellationToken token)
     {

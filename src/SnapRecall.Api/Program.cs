@@ -31,6 +31,8 @@ builder.Services.AddSingleton(x => new BlobServiceClient(builder.Configuration.G
 builder.Services.AddDbContext<SnapRecallDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_DefaultConnection")));
 
+builder.Services.AddScoped<ISnapRecallDbContext>(provider => provider.GetRequiredService<SnapRecallDbContext>());
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();

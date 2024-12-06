@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using SnapRecall.Application.Features.Topics.UpdateTopicCommand;
 using SnapRecall.Application.Messages.Interfaces;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Messages
 {
-    public class AddTopicNameBotMessageHandler(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : IMessage
+    public class AddTopicNameBotMessageHandler(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : IMessage
     {
         public async Task OnMessage(Message message, CancellationToken cancellationToken)
         {

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SnapRecall.Application\SnapRecall.Application.csproj" />
     <ProjectReference Include="..\SnapRecall.Domain\SnapRecall.Domain.csproj" />
   </ItemGroup>
 

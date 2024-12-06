@@ -2,14 +2,13 @@
 using MediatR;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Topics.DeleteTopicCommand;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Commands;
 
-public class DeleteTopicBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
+public class DeleteTopicBotCommand(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
     public static string Name = BotCommands.DeleteTopicBotCommand;
     public static string Description = "";

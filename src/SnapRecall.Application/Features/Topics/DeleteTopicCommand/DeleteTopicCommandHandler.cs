@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SnapRecall.Infrastructure.Data;
+
 
 namespace SnapRecall.Application.Features.Topics.DeleteTopicCommand;
 
-public class DeleteTopicCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<DeleteTopicCommand>
+public class DeleteTopicCommandHandler(ISnapRecallDbContext dbContext) : IRequestHandler<DeleteTopicCommand>
 {
     public async Task Handle(DeleteTopicCommand request, CancellationToken token)
     {

@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.Extensions;
@@ -19,19 +17,19 @@ public partial class SnapRecallBot : SimpleTelegramBotBase
 
     private readonly IMediator mediator;
 
-    private readonly SnapRecallDbContext dbContext;
+    private readonly ISnapRecallDbContext dbContext;
 
     private readonly TelegramSettings settings;
+
     private readonly HttpClient httpClient;
 
     private ITelegramBotClient client { get; }
 
     public SnapRecallBot(
         ILogger<SnapRecallBot> logger,
-        IConfiguration configuration,
         ITelegramBotClient botClient,
         IMediator mediator,
-        SnapRecallDbContext dbContext,
+        ISnapRecallDbContext dbContext,
         IOptions<TelegramSettings> settings,
         HttpClient httpClient)
     {

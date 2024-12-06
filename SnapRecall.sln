@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{18A939C1-DD15-4048-81F8-669F2A2AF6C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapRecall.Infrastructure", "src\SnapRecall.Infrastructure\SnapRecall.Infrastructure.csproj", "{3EFFEB42-939F-4391-9116-3542919C1BA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7DD1994-E3D9-4E0F-9C42-9516051DAB71} = {F7DD1994-E3D9-4E0F-9C42-9516051DAB71}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnapRecall.Application", "src\SnapRecall.Application\SnapRecall.Application.csproj", "{F7DD1994-E3D9-4E0F-9C42-9516051DAB71}"
 EndProject

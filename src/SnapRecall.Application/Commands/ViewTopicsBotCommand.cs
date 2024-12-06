@@ -3,14 +3,13 @@ using MediatR;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Users.UpdateUserCommand;
 using SnapRecall.Domain.Features.Topics.GetTopicsRequest;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Commands;
 
-public class ViewTopicsBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
+public class ViewTopicsBotCommand(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
     public static string Name = Commands.Interfaces.BotCommands.ViewTopicsBotCommand;
     public static string Description = "view your topics";

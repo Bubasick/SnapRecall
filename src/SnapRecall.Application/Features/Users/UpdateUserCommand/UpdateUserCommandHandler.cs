@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
+
 
 namespace SnapRecall.Application.Features.Users.UpdateUserCommand;
 
-public class UpdateUserCommandHandler(SnapRecallDbContext dbContext) : IRequestHandler<UpdateUserCommand>
+public class UpdateUserCommandHandler(ISnapRecallDbContext dbContext) : IRequestHandler<UpdateUserCommand>
 {
     public async Task Handle(UpdateUserCommand request, CancellationToken token)
     {

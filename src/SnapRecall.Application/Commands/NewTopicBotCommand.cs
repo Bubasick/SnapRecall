@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Topics.CreateTopicCommand;
 using SnapRecall.Application.Features.Users.UpdateUserCommand;
-using SnapRecall.Infrastructure.Data;
+
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Commands;
 
-public class NewTopicBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
+public class NewTopicBotCommand(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
     public static string Name = Commands.Interfaces.BotCommands.NewTopicBotCommand;
     public static string Description = "add new topic";

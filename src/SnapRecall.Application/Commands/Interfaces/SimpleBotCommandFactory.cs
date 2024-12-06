@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 
 namespace SnapRecall.Application.Commands.Interfaces
 {
     public static class SimpleBotCommandFactory
     {
-        public static ICommand GetCommandHandler(SnapRecallDbContext dbContext, ITelegramBotClient client, IMediator mediator, string commandName)
+        public static ICommand GetCommandHandler(ISnapRecallDbContext dbContext, ITelegramBotClient client, IMediator mediator, string commandName)
         {
             ICommand handler;
             if (commandName == BotCommands.ConfirmTopicCreationBotCommand)

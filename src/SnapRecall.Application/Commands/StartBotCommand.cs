@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Users.CreateUserCommand;
-using SnapRecall.Infrastructure.Data;
+
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Commands;
 
-public class StartBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
+public class StartBotCommand(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
     public static string Name = BotCommands.StartBotCommand;
     public static string Description = "";

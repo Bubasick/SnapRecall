@@ -4,14 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using SnapRecall.Application.Commands.Interfaces;
 using SnapRecall.Application.Features.Users.UpdateUserCommand;
 using SnapRecall.Domain;
-using SnapRecall.Infrastructure.Data;
 using Telegram.BotAPI;
 using Telegram.BotAPI.AvailableMethods;
 using Telegram.BotAPI.AvailableTypes;
 
 namespace SnapRecall.Application.Commands;
 
-public class BeginTopicBotCommand(SnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
+public class BeginTopicBotCommand(ISnapRecallDbContext dbContext, ITelegramBotClient client, ISender mediator) : ICommand
 {
     public static string Name = BotCommands.BeginTopicBotCommand;
     public static string Description = "begin topic";
